@@ -9,11 +9,18 @@
 #define lab_VERSION_MAJOR 1
 #define lab_VERSION_MINOR 0
 #define UNUSED(x) (void)x;
+#define MAX_JOBS 100
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+  struct background_job {
+      unsigned int job_id;
+      pid_t pid;
+      char *command;
+  };
 
   struct shell
   {
@@ -24,7 +31,9 @@ extern "C"
     char *prompt;
   };
 
-
+  struct background_job *bg_jobs[MAX_JOBS];
+  int job_count;
+  bool job_flag;
 
   /**
    * @brief Set the shell prompt. This function will attempt to load a prompt
@@ -119,6 +128,12 @@ extern "C"
    * @param argv The arg array
    */
   void parse_args(int argc, char **argv);
+
+  unsigned int assign_job_id();
+
+  void add_background_job(unsigned int job_id, pid_t pid, char *command);
+
+  void check_background_jobs();
 
 
 
