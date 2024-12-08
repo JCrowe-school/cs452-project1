@@ -24,9 +24,10 @@ char *get_prompt(const char *env) {
 }
 
 int change_dir(char **dir) {
+	if(dir == NULL) {fprintf(stderr, "Can't change directory will a fully null command!"); return -1;}
     char *tdir = NULL;
 
-    if(dir == NULL || *dir == NULL) {
+    if(dir[1] == NULL || *dir[1] == '\0') {
         const char *hdir = getenv("HOME");
         if(hdir == NULL) {
             struct passwd *pw = getpwuid(getuid());
@@ -35,7 +36,7 @@ int change_dir(char **dir) {
         }
         tdir = strdup(hdir);
     } else {
-        tdir = *dir;
+        tdir = dir[1];
     }
 
     if(chdir(tdir) == -1) {
@@ -57,12 +58,12 @@ int change_dir(char **dir) {
                 break;
         }
 
-        free(tdir);
+		if(tdir != dir[1]) free(tdir);
 
         return -1;
     }
 
-    free(tdir);
+    if(tdir != dir[1]) free(tdir);
 
     return 0;
 }
@@ -121,7 +122,7 @@ bool do_builtin(struct shell *sh, char **argv) {
     if(strcmp(argv[0], "exit") == 0) {
         sh_destroy(sh);
     } else if(strcmp(argv[0], "cd") == 0) {
-        (argv[1] == NULL) ? change_dir(NULL) : change_dir(&argv[1]);
+        change_dir(argv);
         return true;
     } else if(strcmp(argv[0], "history") == 0) {
         HIST_ENTRY **hist = history_list();
