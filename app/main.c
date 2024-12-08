@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <signal.h>
-#include "lab.h"
+#include "../src/lab.h"
 
 int main(int argc, char **argv)
 {

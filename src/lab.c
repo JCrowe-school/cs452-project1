@@ -33,7 +33,7 @@ int change_dir(char **dir) {
             if(pw == NULL) {perror("Failed to retrieve home directory!"); return -1;}
             hdir = pw->pw_dir;
         }
-        tdir = hdir;
+        tdir = strdup(hdir);
     } else {
         tdir = *dir;
     }
@@ -57,8 +57,12 @@ int change_dir(char **dir) {
                 break;
         }
 
+        free(tdir);
+
         return -1;
     }
+
+    free(tdir);
 
     return 0;
 }
@@ -110,7 +114,7 @@ bool do_builtin(struct shell *sh, char **argv) {
     if(strcmp(argv[0], "exit") == 0) {
         sh_destroy(sh);
     } else if(strcmp(argv[0], "cd") == 0) {
-        (argv[1] == NULL) ? change_dir(NULL) : change_dir(argv[1]);
+        (argv[1] == NULL) ? change_dir(NULL) : change_dir(&argv[1]);
         return true;
     } else if(strcmp(argv[0], "history") == 0) {
         HIST_ENTRY **hist = history_list();
@@ -253,6 +257,8 @@ void check_background_jobs() {
                 perror("Invalid arguments for process check!");
             } else if(errno == EINTR) {
                 i--;
+            } else {
+                perror("Error checking processes!");
             }
         }
     }
