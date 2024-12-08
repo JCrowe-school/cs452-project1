@@ -104,7 +104,14 @@ void cmd_free(char ** line) {
 
 char *trim_white(char *line) {
     line += strspn(line, " \t\n\r\f\v"); //trims leading whitespace
-    if(*line) {line[strcspn(line, " \t\n\r\f\v")] = '\0';} //if line isn't null, terminate trailing whitespace
+
+    //if line isn't null, trim trailing whitespace
+    if(*line) {
+        char *end = line + strlen(line) -1;
+        while(end >= line && strchr(" \t\n\r\f\v", *end)) {
+            *end-- = '\0';
+        }
+    } 
     return line;
 }
 

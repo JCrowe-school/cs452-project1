@@ -35,6 +35,8 @@ void test_cmd_parse2(void)
      free(expected[0]);
      free(expected[1]);
      free(expected);
+     cmd_free(actual);
+     free(stng);
 }
 
 void test_cmd_parse(void)
