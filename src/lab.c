@@ -199,7 +199,7 @@ void parse_args(int argc, char **argv) {
     while ((c = getopt (argc, argv, "v")) != -1) {
         switch (c) {
             case 'v':
-                printf("Version %d.%d", lab_VERSION_MAJOR, lab_VERSION_MINOR);
+                printf("Version %d.%d\n", lab_VERSION_MAJOR, lab_VERSION_MINOR);
                 exit(EXIT_SUCCESS);
             default:
                 abort();
